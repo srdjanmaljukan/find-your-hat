@@ -40,8 +40,65 @@ class Field {
         field[hatLocation.y][hatLocation.x] = hat;
         return field;
     }
+
+    isInBounds() {
+      if (this.locationX >= 0 &&
+        this.locationY >= 0 &&
+        this.locationX < this.field[0].length &&
+        this.locationY < this.field.length) {
+          return true;
+        } else {
+          return false;
+        }
+    }
+
+    isHat() {
+      return this.field[this.locationY][this.locationX] === hat;
+    }
+
+    isHole() {
+      return this.field[this.locationY][this.locationX] === hole;
+    }
+
+    askQuestion() {
+      const answer = prompt('Which way? ').toUpperCase();
+      if (answer === 'U') {
+        this.locationY -= 1;
+      } else if (answer === 'D') {
+        this.locationY += 1;
+      } else if (answer === 'R') {
+        this.locationX += 1;
+      } else if (answer === 'L') {
+        this.locationX -= 1;
+      } else {
+        console.log('Nope, choose either L, D, R or U');
+        this.askQuestion();
+      }
+    }
+
+    runGame() {
+      let playing = true;
+      while (playing) {
+        this.print();
+        this.askQuestion();
+        if (!this.isInBounds()) {
+          console.log('Aww, you stepped out of bounds, better luck next time!');
+          playing = false;
+          break;
+        } else if (this.isHole()) {
+          console.log('Did you really not see that giant hole you just found yourself in?');
+          playing = false;
+          break;
+        } else if (this.isHat()) {
+          console.log('Well done, you found your hat!');
+          playing = false;
+          break;
+        }
+        this.field[this.locationY][this.locationX] = pathCharacter;
+      }
+    }
   }
 
-const field = new Field(Field.generateField(20, 10, 0.2));
-console.log(field.print());
+const myField = new Field(Field.generateField(20, 10, 0.2));
+myField.runGame();
   
