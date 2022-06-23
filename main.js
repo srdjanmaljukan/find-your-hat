@@ -33,7 +33,7 @@ class Field {
           x: Math.floor(Math.random() * width),
           y: Math.floor(Math.random() * height)
         }
-        while (hatLocation.x === 0 && hatLocation.y === 0) {
+        while (hatLocation.x === this.locationX && hatLocation.y === this.locationY) {
           hatLocation.x = Math.floor(Math.random() * width);
           hatLocation.y = Math.floor(Math.random() * height);
         }
@@ -61,17 +61,52 @@ class Field {
     }
 
     askQuestion() {
-      const answer = prompt('Which way? ').toUpperCase();
-      if (answer === 'U') {
+      const answer = prompt('Which way? ').toUpperCase();  
+      let randomX = Math.floor(Math.random() * this.field[0].length);
+      let randomY = Math.floor(Math.random() * this.field.length);
+      let randomLocation = this.field[randomY][randomX];
+      if (answer === 'W') {
         this.locationY -= 1;
-      } else if (answer === 'D') {
+        this.field[this.locationY + 1][this.locationX] = fieldCharacter;
+        while (randomLocation === this.field[this.locationY][this.locationX] ||
+          randomLocation === hat || randomLocation === hole ||
+          randomLocation === this.field[this.locationY - 1][this.locationX]) {
+            randomLocation; 
+            this.field[randomY][randomX] = hole;
+            break;
+          }
+      } else if (answer === 'S') {
         this.locationY += 1;
-      } else if (answer === 'R') {
+        this.field[this.locationY - 1][this.locationX] = fieldCharacter;
+        while (randomLocation === this.field[this.locationY][this.locationX] ||
+          randomLocation === hat || randomLocation === hole ||
+          randomLocation === this.field[this.locationY + 1][this.locationX]) {
+            randomLocation; 
+            this.field[randomY][randomX] = hole;
+            break;
+          }
+      } else if (answer === 'D') {
         this.locationX += 1;
-      } else if (answer === 'L') {
+        this.field[this.locationY][this.locationX - 1] = fieldCharacter;
+        while (randomLocation === this.field[this.locationY][this.locationX] ||
+          randomLocation === hat || randomLocation === hole ||
+          randomLocation === this.field[this.locationY][this.locationX + 1]) {
+            randomLocation; 
+            this.field[randomY][randomX] = hole;
+            break;
+          }
+      } else if (answer === 'A') {
         this.locationX -= 1;
+        this.field[this.locationY][this.locationX + 1] = fieldCharacter;
+        while (randomLocation === this.field[this.locationY][this.locationX] ||
+          randomLocation === hat || randomLocation === hole ||
+          randomLocation === this.field[this.locationY][this.locationX - 1]) {
+            randomLocation; 
+            this.field[randomY][randomX] = hole;
+            break;
+          }
       } else {
-        console.log('Nope, choose either L, D, R or U');
+        console.log('Nope, choose either W, A, S or D');
         this.askQuestion();
       }
     }
